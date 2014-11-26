@@ -30,7 +30,7 @@ public class ListViewAdapter  extends ArrayAdapter<ListViewItem> {
 
             // initialize the view holder
             viewHolder = new ViewHolder();
-            viewHolder.ivIcon = (ImageView) convertView.findViewById(R.id.ivIcon);
+            viewHolder.ivIcon = (ImageView) convertView.findViewById(R.id.selfie_photo);
             viewHolder.tvTitle = (TextView) convertView.findViewById(R.id.tvTitle);
             viewHolder.tvDescription = (TextView) convertView.findViewById(R.id.tvDescription);
             convertView.setTag(viewHolder);
@@ -41,7 +41,7 @@ public class ListViewAdapter  extends ArrayAdapter<ListViewItem> {
 
         // update the item view
         ListViewItem item = getItem(position);
-        viewHolder.ivIcon.setImageDrawable(item.icon);
+        viewHolder.ivIcon.setImageBitmap(item.image);
         viewHolder.tvTitle.setText(item.title);
         viewHolder.tvDescription.setText(item.description);
 

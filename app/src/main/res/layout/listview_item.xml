@@ -14,7 +14,7 @@
         android:background="@drawable/frame" >
 
         <!-- the icon view -->
-        <ImageView android:id="@+id/ivIcon"
+        <ImageView android:id="@+id/selfie_photo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="1dp"
@@ -25,7 +25,7 @@
         <!-- the container view for the title and description -->
         <RelativeLayout android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/ivIcon"
+            android:layout_toRightOf="@id/selfie_photo"
             android:layout_centerVertical="true" >
 
             <!-- the title view -->
