@@ -27,7 +27,8 @@ public class MainActivity extends Activity {
 
     private ListViewFragment fragment = null;
     private List<ListViewItem> mItems = new ArrayList<ListViewItem>();
-    private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    private final SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+    private final SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
     private PendingIntent pendingIntent;
     private AlarmManager manager;
     private final int interval = (60 * 1000) * 2; // 2 minutes
@@ -79,7 +80,7 @@ public class MainActivity extends Activity {
         Bitmap bp = (Bitmap) data.getExtras().get("data");
         //fragment.getListAdapter().
 
-        mItems.add(new ListViewItem("Daily Selfie", sdf.format(new Date()), bp));
+        mItems.add(new ListViewItem("Daily Selfie", sdf1.format(new Date()), sdf2.format(new Date()), bp));
         fragment.setListAdapter(new ListViewAdapter(fragment.getActivity(), mItems));
 
     }

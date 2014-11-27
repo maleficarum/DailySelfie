@@ -30,9 +30,8 @@ public class ListViewFragment extends ListFragment {
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        // retrieve theListView item
         ListViewItem item = (ListViewItem) getListAdapter().getItem(position);
 
-        Toast.makeText(getActivity(), item.title, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getActivity(), item.title, Toast.LENGTH_SHORT).show();
     }
 }
