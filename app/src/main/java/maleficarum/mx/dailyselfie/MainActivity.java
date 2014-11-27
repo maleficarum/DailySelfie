@@ -16,11 +16,15 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import maleficarum.mx.dailyselfie.db.DbHelper;
+import maleficarum.mx.dailyselfie.db.SelfieDataSource;
 
 
 public class MainActivity extends Activity {
@@ -32,24 +36,34 @@ public class MainActivity extends Activity {
     private PendingIntent pendingIntent;
     private AlarmManager manager;
     private final int interval = (60 * 1000) * 2; // 2 minutes
+    private SelfieDataSource dataSource ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        dataSource = new SelfieDataSource(this);
+
+        try {
+            dataSource.open();
+        } catch (SQLException e) {
+            Toast.makeText(this, "Error opening DataBase " + e.getLocalizedMessage(), Toast.LENGTH_LONG);
+        }
+
+        //Add fragment
         fragment = new ListViewFragment();
         getFragmentManager().beginTransaction().add(R.id.container, fragment).commit();
 
-        //
-
+        //Init AlarmManager
         Intent alarmIntent = new Intent(this, AlarmReceiver.class);
         pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
 
         manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-
         manager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, pendingIntent);
-        //
+
+        //Load saved data
+        fragment.setListAdapter(new ListViewAdapter(fragment.getActivity(), dataSource.getAllItems()));
     }
 
 

@@ -46,7 +46,7 @@ public class ListViewAdapter  extends ArrayAdapter<ListViewItem> {
         viewHolder.tvTitle.setText(item.title);
         viewHolder.tvDescription.setText(item.description);
         viewHolder.hours.setText(item.hours);
-        
+
         return convertView;
     }
 
