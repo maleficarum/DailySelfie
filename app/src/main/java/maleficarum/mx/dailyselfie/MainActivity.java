@@ -3,6 +3,7 @@ package maleficarum.mx.dailyselfie;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -10,6 +11,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -25,6 +27,9 @@ public class MainActivity extends Activity {
     private ListViewFragment fragment = null;
     private List<ListViewItem> mItems = new ArrayList<ListViewItem>();
     private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    private PendingIntent pendingIntent;
+    private AlarmManager manager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,11 +50,8 @@ public class MainActivity extends Activity {
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.AM_PM, Calendar.PM);
 
-        Intent myIntent = new Intent(MainActivity.this, MyReceiver.class);
-        pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, myIntent, 0);
-
-        AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC, calendar.getTimeInMillis(), pendingIntent);
+        Intent alarmIntent = new Intent(this, AlarmReceiver.class);
+        pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
 
         //
     }
@@ -84,6 +86,22 @@ public class MainActivity extends Activity {
 
         mItems.add(new ListViewItem("Daily Selfie", sdf.format(new Date()), bp));
         fragment.setListAdapter(new ListViewAdapter(fragment.getActivity(), mItems));
+
+    }
+
+    public void startAlarm(View view) {
+        manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        int interval = 10000; // 10 seconds
+
+        manager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, pendingIntent);
+        Toast.makeText(this, "Alarm Set", Toast.LENGTH_SHORT).show();
+    }
+
+    public void cancelAlarm(View view) {
+        if (manager != null) {
+            manager.cancel(pendingIntent);
+            Toast.makeText(this, "Alarm Canceled", Toast.LENGTH_SHORT).show();
+        }
 
     }
 }
