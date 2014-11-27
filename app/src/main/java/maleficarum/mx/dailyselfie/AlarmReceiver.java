@@ -13,7 +13,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context arg0, Intent arg1) {
         // For our recurring task, we'll just display a message
-        Toast.makeText(arg0, "I'm running", Toast.LENGTH_SHORT).show();
+        Toast.makeText(arg0, "I'm running", Toast.LENGTH_LONG).show();
 
     }
 

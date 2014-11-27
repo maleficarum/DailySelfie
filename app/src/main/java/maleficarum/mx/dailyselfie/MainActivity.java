@@ -9,6 +9,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,6 +30,7 @@ public class MainActivity extends Activity {
     private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     private PendingIntent pendingIntent;
     private AlarmManager manager;
+    private final int interval = 10 * 1000; // 10 seconds
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,20 +41,13 @@ public class MainActivity extends Activity {
         getFragmentManager().beginTransaction().add(R.id.container, fragment).commit();
 
         //
-        Calendar calendar = Calendar.getInstance();
-
-        calendar.set(Calendar.MONTH, 6);
-        calendar.set(Calendar.YEAR, 2013);
-        calendar.set(Calendar.DAY_OF_MONTH, 13);
-
-        calendar.set(Calendar.HOUR_OF_DAY, 20);
-        calendar.set(Calendar.MINUTE, 48);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.AM_PM, Calendar.PM);
 
         Intent alarmIntent = new Intent(this, AlarmReceiver.class);
         pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
 
+        manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+        manager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, pendingIntent);
         //
     }
 
@@ -87,14 +82,6 @@ public class MainActivity extends Activity {
         mItems.add(new ListViewItem("Daily Selfie", sdf.format(new Date()), bp));
         fragment.setListAdapter(new ListViewAdapter(fragment.getActivity(), mItems));
 
-    }
-
-    public void startAlarm(View view) {
-        manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        int interval = 10000; // 10 seconds
-
-        manager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, pendingIntent);
-        Toast.makeText(this, "Alarm Set", Toast.LENGTH_SHORT).show();
     }
 
     public void cancelAlarm(View view) {
