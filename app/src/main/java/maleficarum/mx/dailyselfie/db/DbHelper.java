@@ -33,6 +33,7 @@ public class DbHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase database) {
         database.execSQL(DATABASE_CREATE);
+        Log.i("Maleficarum", "Created " + DATABASE_CREATE);
     }
 
     @Override
@@ -42,6 +43,8 @@ public class DbHelper extends SQLiteOpenHelper {
                         + newVersion + ", which will destroy all old data");
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
         onCreate(db);
+
+        Log.i("Maleficarum", "Updated " + DATABASE_CREATE);
     }
 
 }

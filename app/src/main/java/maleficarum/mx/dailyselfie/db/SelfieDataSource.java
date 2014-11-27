@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import org.w3c.dom.Comment;
 
@@ -44,6 +45,8 @@ public class SelfieDataSource {
 
         long insertId = database.insert(DbHelper.TABLE_NAME, null,values);
 
+        Log.i("Maleficarum", "Created item " + insertId);
+
         return item;
     }
 
@@ -60,6 +63,8 @@ public class SelfieDataSource {
             //comments.add(comment);
             cursor.moveToNext();
         }
+
+        Log.i("Maleficarum", "Fetched " + items);
 
         cursor.close();
         return items;

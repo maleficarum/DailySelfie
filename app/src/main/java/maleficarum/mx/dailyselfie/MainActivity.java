@@ -63,7 +63,8 @@ public class MainActivity extends Activity {
         manager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, pendingIntent);
 
         //Load saved data
-        fragment.setListAdapter(new ListViewAdapter(fragment.getActivity(), dataSource.getAllItems()));
+       // fragment.setListAdapter(new ListViewAdapter(fragment.getActivity(), dataSource.getAllItems()));
+        fragment.setListAdapter(new ListViewAdapter(fragment.getActivity(), new ArrayList<ListViewItem>()));
     }
 
 
