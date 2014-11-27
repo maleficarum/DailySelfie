@@ -30,7 +30,7 @@ public class MainActivity extends Activity {
     private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     private PendingIntent pendingIntent;
     private AlarmManager manager;
-    private final int interval = 10 * 1000; // 10 seconds
+    private final int interval = (60 * 1000) * 2; // 2 minutes
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
