@@ -5,8 +5,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+
 /**
- * Created by oscar on 11/27/14.
+ * @author  maleficarum [ github.com/maleficarum ]
  */
 public class DbHelper extends SQLiteOpenHelper {
 
@@ -22,7 +23,7 @@ public class DbHelper extends SQLiteOpenHelper {
     // Database creation sql statement
     private static final String DATABASE_CREATE = "create table "
             + TABLE_NAME + "(" + COLUMN_ID + " integer primary key autoincrement, "
-            + COLUMN_FILE + " text not null,"
+            + COLUMN_FILE + " BLOB NOT NULL,"
             + COLUMN_DATE + " TEXT NOT NULL,"
             + COLUMN_HOUR + " TEXT NOT NULL);";
 

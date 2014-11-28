@@ -4,18 +4,22 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import org.w3c.dom.Comment;
 
+import java.io.ByteArrayOutputStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import maleficarum.mx.dailyselfie.ListViewItem;
 
+
 /**
- * Created by oscar on 11/27/14.
+ * @author  maleficarum [ github.com/maleficarum ]
  */
 public class SelfieDataSource {
 
@@ -39,9 +43,13 @@ public class SelfieDataSource {
     }
 
     public ListViewItem createItem(ListViewItem item) {
+        ByteArrayOutputStream bos=new ByteArrayOutputStream();
+        item.image.compress(Bitmap.CompressFormat.PNG, 100, bos);
+
         ContentValues values = new ContentValues();
         values.put(DbHelper.COLUMN_DATE, item.description);
         values.put(DbHelper.COLUMN_HOUR, item.hours);
+        values.put(DbHelper.COLUMN_FILE, bos.toByteArray());
 
         long insertId = database.insert(DbHelper.TABLE_NAME, null,values);
 
@@ -53,14 +61,12 @@ public class SelfieDataSource {
     public List<ListViewItem> getAllItems() {
         List<ListViewItem> items = new ArrayList<ListViewItem>();
 
-        Cursor cursor = database.query(DbHelper.TABLE_NAME,
-                allColumns, null, null, null, null, null);
+        Cursor cursor = database.query(DbHelper.TABLE_NAME, allColumns, null, null, null, null, null);
 
         cursor.moveToFirst();
 
         while (!cursor.isAfterLast()) {
-            ListViewItem item = cursorToItem(cursor);
-            //comments.add(comment);
+            items.add(cursorToItem(cursor));
             cursor.moveToNext();
         }
 
@@ -71,10 +77,9 @@ public class SelfieDataSource {
     }
 
     private ListViewItem cursorToItem(Cursor cursor) {
-        /*Comment comment = new Comment();
-        comment.setId(cursor.getLong(0));
-        comment.setComment(cursor.getString(1));
-        return comment;*/
-        return null;
+        byte[] img = cursor.getBlob(cursor.getColumnIndex(DbHelper.COLUMN_FILE));
+        Bitmap bm= BitmapFactory.decodeByteArray(img, 0, img.length);
+        ListViewItem item = new ListViewItem("Daily Selfie", cursor.getString(2), cursor.getString(3), bm);
+        return item;
     }
 }

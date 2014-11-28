@@ -3,12 +3,15 @@ package maleficarum.mx.dailyselfie;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,11 +25,15 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import maleficarum.mx.dailyselfie.db.DbHelper;
 import maleficarum.mx.dailyselfie.db.SelfieDataSource;
 
-
+/**
+ * @author  maleficarum [ github.com/maleficarum ]
+ */
 public class MainActivity extends Activity {
 
     private ListViewFragment fragment = null;
@@ -62,24 +69,32 @@ public class MainActivity extends Activity {
         manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         manager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, pendingIntent);
 
-        //Load saved data
-       // fragment.setListAdapter(new ListViewAdapter(fragment.getActivity(), dataSource.getAllItems()));
-        fragment.setListAdapter(new ListViewAdapter(fragment.getActivity(), new ArrayList<ListViewItem>()));
+        Toast.makeText(this, "Loading data ...", Toast.LENGTH_LONG);
+
+        //Load saved data; this should be done with this approach because the fragment causes NPE if does not wait a second
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable(){
+
+                    @Override
+                    public void run() {
+                        fragment.setListAdapter(new ListViewAdapter(fragment.getActivity(), dataSource.getAllItems()));
+                    }});
+
+            }
+        }, 1000);
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         if (id == R.id.action_selfie) {
@@ -87,16 +102,19 @@ public class MainActivity extends Activity {
             startActivityForResult(intent, 0);
             return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Bitmap bp = (Bitmap) data.getExtras().get("data");
-        //fragment.getListAdapter().
 
-        mItems.add(new ListViewItem("Daily Selfie", sdf1.format(new Date()), sdf2.format(new Date()), bp));
-        fragment.setListAdapter(new ListViewAdapter(fragment.getActivity(), mItems));
+        ListViewItem item = new ListViewItem("Daily Selfie", sdf1.format(new Date()), sdf2.format(new Date()), bp);
+        dataSource.createItem(item);
+
+        fragment.setListAdapter(new ListViewAdapter(fragment.getActivity(), dataSource.getAllItems()));
+
 
     }
 

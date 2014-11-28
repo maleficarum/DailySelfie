@@ -3,9 +3,13 @@ package maleficarum.mx.dailyselfie;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 
+
+/**
+ * @author  maleficarum [ github.com/maleficarum ]
+ */
 public class ListViewItem {
-    public final String title;        // the text for the ListView item title
-    public final String description;  // the text for the ListView item description
+    public String title;
+    public String description;
     public Bitmap image ;
     public String hours;
 
